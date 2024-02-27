@@ -3,5 +3,5 @@ export interface TaskType {
     task_name: string;
     due_date: string;
     priority: 'Low' | 'Medium' | 'High';
-    status: string;
+    status: 'To Do' | 'Done';
 }

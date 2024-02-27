@@ -22,11 +22,16 @@ export function Modal({
     onAddTask,
 }: {
     onCloseModal: () => void;
-    onAddTask: (title: string, due_date: string, priority: string) => void;
+    onAddTask: (
+        task_name: string,
+        priority: 'Low' | 'Medium' | 'High',
+        due_date: string,
+    ) => void;
 }) {
     const [title, setTitle] = useState<string>('');
-    const [priority, setPriority] = useState<string>('Low');
+    const [priority, setPriority] = useState<'Low' | 'Medium' | 'High'>('Low');
     const [dueDate, setDueDate] = useState<string>('');
+    const formattedDate = new Date().toISOString().split('T')[0];
 
     return (
         <div className='absolute top-0 left-0 w-screen bg-black/75 h-screen m-0 z-10 flex justify-center items-center'>
@@ -53,7 +58,11 @@ export function Modal({
                                     <Label htmlFor='priority'>Priority</Label>
                                     <Select
                                         value={priority}
-                                        onValueChange={(e) => setPriority(e)}
+                                        onValueChange={(e) =>
+                                            setPriority(
+                                                e as 'Low' | 'Medium' | 'High',
+                                            )
+                                        }
                                     >
                                         <SelectTrigger id='priority'>
                                             <SelectValue placeholder='Select' />
@@ -79,6 +88,7 @@ export function Modal({
                                         onChange={(e) =>
                                             setDueDate(e.target.value)
                                         }
+										min={formattedDate}
                                     />
                                 </div>
                             </div>
@@ -89,7 +99,12 @@ export function Modal({
                             Cancel
                         </Button>
                         <Button
-                            onClick={() => onAddTask(title, dueDate, priority)}
+                            onClick={() => {
+								setTitle('');
+								setPriority('Low');
+								setDueDate('');
+                                onAddTask(title, priority, dueDate);
+                            }}
                         >
                             Add
                         </Button>

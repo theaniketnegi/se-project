@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from './components/ui/button';
 import { TaskType } from './types';
 import { ScrollArea } from './components/ui/scroll-area';
 import { Modal } from './components/Modal';
+import TaskCard from './components/TaskCard/TaskCard';
 
 const DUMMY_TASKS: TaskType[] = [
     {
@@ -90,6 +91,33 @@ const DUMMY_TASKS: TaskType[] = [
 const App = () => {
     const [tasks, setTasks] = useState<TaskType[]>(DUMMY_TASKS);
     const [showModal, setShowModal] = useState<boolean>(false);
+	
+	const sortedTasks:TaskType[] = tasks.sort((task1, task2) => {
+		// Assign numerical values to each priority level
+		const priorityValues = { 'Low': 0, 'Medium': 1, 'High': 2 };
+	
+		// Compare tasks based on their priority values
+		const priorityValue1 = priorityValues[task1.priority];
+		const priorityValue2 = priorityValues[task2.priority];
+	
+		// Tasks with higher priority values come first
+		return priorityValue2 - priorityValue1;
+	});
+	
+	
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                setShowModal(false);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
 
     const handleCloseModal = () => {
         setShowModal(false);
@@ -97,18 +125,19 @@ const App = () => {
 
     const handleAddTask = (
         title: string,
-        priority: Pick<TaskType, 'priority'>,
+        priority: 'Low' | 'Medium' | 'High',
         due_date: string,
     ) => {
-        const newTask:TaskType = {
+        const newTask: TaskType = {
             id: Date.now(),
-            title,
+            task_name: title,
             priority,
             due_date,
             status: 'To Do',
         };
 
         setTasks(tasks.concat(newTask));
+        setShowModal(false);
         console.log(title, priority, due_date);
     };
 
@@ -128,22 +157,8 @@ const App = () => {
                 <Button onClick={() => setShowModal(true)}>Add a task</Button>
                 <ScrollArea className='h-[600px] p-4 border-2 rounded-md'>
                     <div className='space-y-4'>
-                        {tasks.map((task) => (
-                            <div
-                                className={`border-l-8  p-4 border-2 rounded-lg shadow-sm ${
-                                    task.priority === 'Low'
-                                        ? 'border-green-300'
-                                        : task.priority == 'Medium'
-                                        ? 'border-yellow-300'
-                                        : 'border-red-300'
-                                }
-									flex justify-between
-								`}
-                                key={task.id}
-                            >
-                                <div>{task.task_name}</div>
-                                <div>{task.due_date}</div>
-                            </div>
+                        {sortedTasks.map((task) => (
+                            <TaskCard key={task.id} task={task} />
                         ))}
                     </div>
                 </ScrollArea>
