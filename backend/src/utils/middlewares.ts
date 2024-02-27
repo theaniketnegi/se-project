@@ -1,5 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 
+export const requestLogger = (req:Request, res:Response, next: NextFunction) => {
+    console.log('Method:', req.method);
+    console.log('Path: ', req.path);
+    console.log('Body: ', req.body);
+    console.log('---');
+    next();
+};
 export const unknownEndpoint = (req:Request, res:Response) => {
     return res.status(404).send({ error: 'unknown endpoint' });
 };
