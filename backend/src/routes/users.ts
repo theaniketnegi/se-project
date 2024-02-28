@@ -15,7 +15,7 @@ userRouter.get('/:id', async (req, res, next) => {
     const id = req.params.id;
     const user = await User.findById(id);
     if (user) res.status(200).json(user);
-    else res.status(404).json({ error: 'Not found' });
+    else res.status(404).json({ err: 'Not found' });
 });
 
 userRouter.post('/', async (req, res, next) => {

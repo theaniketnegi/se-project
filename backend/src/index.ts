@@ -5,6 +5,7 @@ import taskRouter from './routes/tasks';
 import userRouter from './routes/users';
 import { errorHandler, requestLogger, unknownEndpoint, userPayload } from './utils/middlewares';
 import loginRouter from './routes/login';
+import projectRouter from './routes/projects';
 
 const app = express();
 
@@ -26,7 +27,7 @@ app.use('/api/login', loginRouter);
 app.use('/api/users', userRouter);
 app.use(userPayload);
 app.use('/api/tasks', taskRouter);
-
+app.use('/api/projects', projectRouter);
 app.use(unknownEndpoint);
 app.use(errorHandler);
 app.listen(PORT || 5000, () => {

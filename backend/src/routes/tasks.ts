@@ -13,10 +13,11 @@ taskRouter.get('/', async (req: CustomUserRequest, res, next) => {
 });
 
 taskRouter.get('/:id', async (req: CustomUserRequest, res, next) => {
+	const user = req.user;
     const id = req.params.id;
-    const task = await Task.findById(id);
+    const task = await Task.findOne({created_by: user?.id, _id: id});
     if (task) res.status(200).json(task);
-    else res.status(404).json({ error: 'Not found' });
+    else res.status(404).json({ err: 'Not found' });
 });
 
 taskRouter.post('/', async (req: CustomUserRequest, res, next) => {

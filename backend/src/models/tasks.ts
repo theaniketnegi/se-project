@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import uniqueValidator from 'mongoose-unique-validator';
 
 interface TaskType extends Document {
     title: string;
@@ -45,5 +44,4 @@ const taskSchema: mongoose.Schema = new mongoose.Schema(
     { timestamps: true },
 );
 
-taskSchema.plugin(uniqueValidator);
 export const Task = mongoose.model<TaskType>('Task', taskSchema);
