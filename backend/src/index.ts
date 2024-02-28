@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { MONGODB_URI } from './utils/config';
 import taskRouter from './routes/tasks';
 import userRouter from './routes/users';
-import { errorHandler, requestLogger, unknownEndpoint } from './utils/middlewares';
+import { errorHandler, requestLogger, unknownEndpoint, userPayload } from './utils/middlewares';
 import loginRouter from './routes/login';
 
 const app = express();
@@ -22,9 +22,11 @@ app.get('/', (req, res) => {
 
 app.use(express.json());
 app.use(requestLogger);
-app.use('/api/tasks', taskRouter);
-app.use('/api/users', userRouter);
 app.use('/api/login', loginRouter);
+app.use('/api/users', userRouter);
+app.use(userPayload);
+app.use('/api/tasks', taskRouter);
+
 app.use(unknownEndpoint);
 app.use(errorHandler);
 app.listen(PORT || 5000, () => {

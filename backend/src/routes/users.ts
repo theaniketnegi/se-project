@@ -2,6 +2,7 @@ import express from 'express';
 import bcrypt from 'bcrypt';
 import { User } from '../models/users';
 import 'express-async-errors';
+import { Task } from '../models/tasks';
 
 const userRouter = express.Router();
 
@@ -25,6 +26,17 @@ userRouter.post('/', async (req, res, next) => {
     const user = new User({ name, section, student_id, program, passwordHash });
     const newUser = await user.save();
     return res.status(201).json(newUser);
+});
+
+userRouter.delete('/:id', async (req, res, next) => {
+    const id = req.params.id;
+    const userFromDB = await User.findById(id);
+    const taskIds = userFromDB?.tasks;
+
+    await User.findByIdAndDelete(id);
+    await Task.deleteMany({ _id: { $in: taskIds } });
+
+	return res.status(204).end();
 });
 
 export default userRouter;

@@ -2,7 +2,7 @@ import express from 'express';
 import bcrypt from 'bcrypt';
 import { User } from '../models/users';
 import jwt from 'jsonwebtoken';
-
+import { UserPayloadType } from '../utils/types';
 import 'express-async-errors';
 import { SECRET } from '../utils/config';
 
@@ -18,8 +18,8 @@ loginRouter.post('/', async (req, res, next) => {
     if (!(user && passwordCorrect)) {
         return res.status(401).json({ err: 'Invalid username or password' });
     }
-    const payload = { student_id, id: user._id };
-    const token = jwt.sign(payload, SECRET);
+    const payload:UserPayloadType = { student_id, id: user._id };
+    const token:string = jwt.sign(payload, SECRET);
     return res.status(200).send({ token, student_id, name: user.name });
 });
 

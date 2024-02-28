@@ -1,4 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
+import { CustomUserRequest, UserPayloadType } from './types';
+import { SECRET } from './config';
+import jwt from 'jsonwebtoken';
 
 export const requestLogger = (req:Request, res:Response, next: NextFunction) => {
     console.log('Method:', req.method);
@@ -24,3 +27,22 @@ export const errorHandler = (err:Error, req:Request, res:Response, next: NextFun
     }
     next(err);
 };
+
+const getTokenFromHeaders = (req: Request) => {
+	const authorization = req.get('Authorization');
+	const token = authorization?.startsWith('Bearer ') ? authorization?.replace('Bearer ', '') : null;
+	return token;
+}
+
+export const userPayload = (req: CustomUserRequest, res: Response, next: NextFunction) => {
+	const token = getTokenFromHeaders(req);
+	if(!token)
+		return res.status(401).json({err: "Missing token"});
+	const payload:UserPayloadType = jwt.verify(token, SECRET) as UserPayloadType;
+	if(!payload.id){
+		return res.status(401).json({err: "Invalid token"});
+	}
+	
+	req.user = payload;
+	next();
+}

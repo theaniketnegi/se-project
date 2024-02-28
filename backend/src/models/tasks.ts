@@ -1,16 +1,17 @@
 import mongoose from 'mongoose';
 import uniqueValidator from 'mongoose-unique-validator';
 
-
 interface TaskType extends Document {
     title: string;
     due_date: Date;
     done?: boolean;
-    priority?: string;
+    priority: string;
     created_by: mongoose.Types.ObjectId;
 }
 
-const taskSchema:mongoose.Schema = new mongoose.Schema(
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+const taskSchema: mongoose.Schema = new mongoose.Schema(
     {
         title: {
             type: String,
@@ -18,7 +19,12 @@ const taskSchema:mongoose.Schema = new mongoose.Schema(
         },
         due_date: {
             type: Date,
-            required: true,
+            validate: {
+                validator: function (v: Date) {
+                    return v >= today;
+                },
+				message: `Due date should be either today or later`,
+            },
         },
         done: {
             type: Boolean,
@@ -28,6 +34,7 @@ const taskSchema:mongoose.Schema = new mongoose.Schema(
             type: String,
             enum: ['Low', 'Normal', 'High'],
             default: 'Low',
+            required: true,
         },
         created_by: {
             type: mongoose.Types.ObjectId,
