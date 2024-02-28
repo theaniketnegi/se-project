@@ -17,19 +17,15 @@ import {
 } from '@/components/ui/select';
 import { useState } from 'react';
 
-export function Modal({
+export function TaskModal({
     onCloseModal,
     onAddTask,
 }: {
     onCloseModal: () => void;
-    onAddTask: (
-        task_name: string,
-        priority: 'Low' | 'Medium' | 'High',
-        due_date: string,
-    ) => void;
+    onAddTask: (task_name: string, due_date: string, priority: string) => void;
 }) {
     const [title, setTitle] = useState<string>('');
-    const [priority, setPriority] = useState<'Low' | 'Medium' | 'High'>('Low');
+    const [priority, setPriority] = useState<string>('Low');
     const [dueDate, setDueDate] = useState<string>('');
     const formattedDate = new Date().toISOString().split('T')[0];
 
@@ -58,11 +54,7 @@ export function Modal({
                                     <Label htmlFor='priority'>Priority</Label>
                                     <Select
                                         value={priority}
-                                        onValueChange={(e) =>
-                                            setPriority(
-                                                e as 'Low' | 'Medium' | 'High',
-                                            )
-                                        }
+                                        onValueChange={(e) => setPriority(e)}
                                     >
                                         <SelectTrigger id='priority'>
                                             <SelectValue placeholder='Select' />
@@ -71,8 +63,8 @@ export function Modal({
                                             <SelectItem value='Low'>
                                                 Low
                                             </SelectItem>
-                                            <SelectItem value='Medium'>
-                                                Medium
+                                            <SelectItem value='Normal'>
+                                                Normal
                                             </SelectItem>
                                             <SelectItem value='High'>
                                                 High
@@ -88,7 +80,7 @@ export function Modal({
                                         onChange={(e) =>
                                             setDueDate(e.target.value)
                                         }
-										min={formattedDate}
+                                        min={formattedDate}
                                     />
                                 </div>
                             </div>
@@ -100,10 +92,10 @@ export function Modal({
                         </Button>
                         <Button
                             onClick={() => {
-								setTitle('');
-								setPriority('Low');
-								setDueDate('');
-                                onAddTask(title, priority, dueDate);
+                                setTitle('');
+                                setPriority('Low');
+                                setDueDate('');
+                                onAddTask(title, dueDate, priority);
                             }}
                         >
                             Add

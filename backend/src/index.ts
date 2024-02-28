@@ -6,7 +6,7 @@ import userRouter from './routes/users';
 import { errorHandler, requestLogger, unknownEndpoint, userPayload } from './utils/middlewares';
 import loginRouter from './routes/login';
 import projectRouter from './routes/projects';
-
+import cors from 'cors';
 const app = express();
 
 mongoose.set('strictQuery', true);
@@ -21,6 +21,7 @@ app.get('/', (req, res) => {
     res.json({ msg: 'Hello' });
 });
 
+app.use(cors());
 app.use(express.json());
 app.use(requestLogger);
 app.use('/api/login', loginRouter);

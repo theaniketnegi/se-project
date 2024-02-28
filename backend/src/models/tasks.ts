@@ -9,7 +9,8 @@ interface TaskType extends Document {
 }
 
 const today = new Date();
-today.setHours(0, 0, 0, 0);
+today.setUTCHours(0,0,0,0);
+console.log(today);
 const taskSchema: mongoose.Schema = new mongoose.Schema(
     {
         title: {

@@ -6,7 +6,7 @@ const TaskCard = ({ task }: { task: TaskType }) => {
     const [done, setDone] = useState(false);
 
     useEffect(() => {
-        if (task.status === 'Done') setDone(true);
+        if (task.done) setDone(true);
     }, []);
     return (
         <div
@@ -15,20 +15,19 @@ const TaskCard = ({ task }: { task: TaskType }) => {
                     ? ''
                     : task.priority === 'Low'
                     ? 'border-green-300'
-                    : task.priority == 'Medium'
+                    : task.priority == 'Normal'
                     ? 'border-yellow-300'
                     : 'border-red-500'
             } ${done && 'border-gray-400'}
 		flex justify-between
 	`}
-            key={task.id}
         >
             <div className='flex items-center space-x-4'>
                 <Checkbox
                     className={`${
                         task.priority === 'Low'
                             ? 'border-green-300'
-                            : task.priority == 'Medium'
+                            : task.priority == 'Normal'
                             ? 'border-yellow-300'
                             : 'border-red-500'
                     } ${
@@ -39,13 +38,13 @@ const TaskCard = ({ task }: { task: TaskType }) => {
                     onCheckedChange={setDone}
                 />
                 <div className={`relative ${done && 'text-gray-400'}`}>
-                    {task.task_name}{' '}
+                    {task.title}{' '}
                     {done && (
                         <div className='w-full absolute top-1/2 border-t-2 border-gray-400'></div>
                     )}
                 </div>
             </div>
-            <div className={`${done && 'text-gray-400'}`}>{task.due_date}</div>
+            <div className={`${done && 'text-gray-400'}`}>{task.due_date.toString().split('T')[0]}</div>
         </div>
     );
 };

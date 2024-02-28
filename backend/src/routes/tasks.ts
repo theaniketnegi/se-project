@@ -3,6 +3,7 @@ import { Task } from '../models/tasks';
 import 'express-async-errors';
 import { CustomUserRequest } from '../utils/types';
 import { User } from '../models/users';
+import { startOfDay } from 'date-fns';
 
 const taskRouter = express.Router();
 
@@ -12,10 +13,19 @@ taskRouter.get('/', async (req: CustomUserRequest, res, next) => {
     return res.json(tasks);
 });
 
+taskRouter.get('/today', async (req: CustomUserRequest, res, next) => {
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+	console.log(today);
+    const user = req.user;
+    const tasks = await Task.find({ created_by: user?.id, due_date: today });
+    return res.json(tasks);
+});
+
 taskRouter.get('/:id', async (req: CustomUserRequest, res, next) => {
-	const user = req.user;
+    const user = req.user;
     const id = req.params.id;
-    const task = await Task.findOne({created_by: user?.id, _id: id});
+    const task = await Task.findOne({ created_by: user?.id, _id: id });
     if (task) res.status(200).json(task);
     else res.status(404).json({ err: 'Not found' });
 });
