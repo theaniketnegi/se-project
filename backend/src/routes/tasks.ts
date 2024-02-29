@@ -16,7 +16,6 @@ taskRouter.get('/', async (req: CustomUserRequest, res, next) => {
 taskRouter.get('/today', async (req: CustomUserRequest, res, next) => {
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
-	console.log(today);
     const user = req.user;
     const tasks = await Task.find({ created_by: user?.id, due_date: today });
     return res.json(tasks);

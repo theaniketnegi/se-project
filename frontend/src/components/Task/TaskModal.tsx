@@ -17,6 +17,8 @@ import {
 } from '@/components/ui/select';
 import { useState } from 'react';
 
+const formattedDate = new Date().toISOString().split('T')[0];
+
 export function TaskModal({
     onCloseModal,
     onAddTask,
@@ -26,8 +28,7 @@ export function TaskModal({
 }) {
     const [title, setTitle] = useState<string>('');
     const [priority, setPriority] = useState<string>('Low');
-    const [dueDate, setDueDate] = useState<string>('');
-    const formattedDate = new Date().toISOString().split('T')[0];
+    const [dueDate, setDueDate] = useState<string>(formattedDate);
 
     return (
         <div className='absolute top-0 left-0 w-screen bg-black/75 h-screen m-0 z-10 flex justify-center items-center'>

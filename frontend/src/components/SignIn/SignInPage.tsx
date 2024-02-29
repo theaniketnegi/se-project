@@ -6,14 +6,17 @@ import axios from 'axios';
 import { useUserStore } from '@/store/userStore';
 import { UserType } from '@/types';
 import { useToast } from '@/components/ui/use-toast';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const SignInPage = () => {
     const [studentId, setStudentId] = useState('');
     const [password, setPassword] = useState('');
+    const user = useUserStore((state) => state.user);
     const setUser = useUserStore((state) => state.setUser);
     const { toast } = useToast();
-	const navigate = useNavigate();
+    const navigate = useNavigate();
+
+    if (user) return <Navigate to='/today' />;
 
     const SignInButtonHandler = async (e: FormEvent) => {
         e.preventDefault();
@@ -30,14 +33,15 @@ const SignInPage = () => {
             console.log(userPayload);
             setStudentId('');
             setPassword('');
-			localStorage.setItem('userPayload', JSON.stringify(userPayload));
-			navigate('/');
-        } catch (err) {
-			toast({
-				variant: 'destructive',
-				title: `Unauthorized`,
-				description: `${err.response.data.err}`,
-			});
+            localStorage.setItem('userPayload', JSON.stringify(userPayload));
+            navigate('/today');
+        } catch (err: unknown) {
+            const error = err as { response: { data: { err: string } } };
+            toast({
+                variant: 'destructive',
+                title: `Unauthorized`,
+                description: `${error.response.data.err}`,
+            });
         }
     };
     return (
