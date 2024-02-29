@@ -1,7 +1,7 @@
 import CreateButton from './CreateButton';
+import ProjectCard from './Project/ProjectCard';
 
 const Projects = ({ user }: { user: UserType }) => {
-    
     return (
         <>
             <div className='w-[90%] p-8 mx-auto flex flex-col space-y-8'>
@@ -11,11 +11,17 @@ const Projects = ({ user }: { user: UserType }) => {
                 </div>
                 <CreateButton
                     className='w-32 py-1 px-2 ml-auto flex justify-around items-center'
-					onClick={()=>console.log('test')}
-					text='New Project'
+                    onClick={() => console.log('test')}
+                    text='New Project'
                 />
                 <div className='w-full h-full'>
-                    
+                    <div className='grid grid-cols-3 gap-24'>
+                        <ProjectCard />
+                        <ProjectCard />
+                        <ProjectCard />
+                        <ProjectCard />
+                        <ProjectCard />
+                    </div>
                 </div>
             </div>
         </>

@@ -8,6 +8,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useToast } from './ui/use-toast';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import TasksView from './TasksView';
+import { sortTasksByPriority } from '@/lib/sort';
 
 const formattedDate = new Date().toISOString().split('T')[0];
 
@@ -20,12 +21,14 @@ const Tasks = ({ user }: { user: UserType }) => {
             due_date: string;
             priority: string;
         }) =>
-            axios.post('/api/tasks', task, {
-                headers: {
-                    Authorization: `Bearer ${user?.token}`,
-                },
-            }),
-        onError: (error) =>
+            axios
+                .post('/api/tasks', task, {
+                    headers: {
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                })
+                .then((res) => res.data),
+        onError: (error: { response: { data: { err: string } } }) =>
             toast({
                 variant: 'destructive',
                 title: 'Error creating task',
@@ -33,40 +36,16 @@ const Tasks = ({ user }: { user: UserType }) => {
                     ? `${error.response.data.err}`
                     : 'Error connecting',
             }),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['tasks'] });
+        onSuccess: (newTask: TaskType) => {
+            const fetchTasks: TaskType[] = queryClient.getQueryData([
+                'tasks',
+            ]) as TaskType[];
+            queryClient.setQueryData(
+                ['tasks'],
+                sortTasksByPriority(fetchTasks.concat(newTask)),
+            );
         },
     });
-
-    const swap = (arr: TaskType[], i: number, j: number): void => {
-        const temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-    };
-
-    const sortTasksByPriority = (tasks: TaskType[]): TaskType[] => {
-        let low = 0;
-        let normal = 0;
-        let high = tasks.length - 1;
-
-        while (normal <= high) {
-            switch (tasks[normal].priority) {
-                case 'High':
-                    swap(tasks, low++, normal++);
-                    break;
-                case 'Normal':
-                    normal++;
-                    break;
-                case 'Low':
-                    swap(tasks, normal, high--);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        return tasks;
-    };
 
     const fetchedTasks = useQuery({
         queryKey: ['tasks'],
@@ -151,11 +130,18 @@ const Tasks = ({ user }: { user: UserType }) => {
                             <Routes>
                                 <Route
                                     path='/today'
-                                    element={<TasksView tasks={todaysTasks} />}
+                                    element={
+                                        <TasksView
+                                            user={user}
+                                            tasks={todaysTasks}
+                                        />
+                                    }
                                 />
                                 <Route
                                     path='/all'
-                                    element={<TasksView tasks={tasks} />}
+                                    element={
+                                        <TasksView user={user} tasks={tasks} />
+                                    }
                                 />
                             </Routes>
                         </div>
