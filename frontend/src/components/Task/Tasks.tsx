@@ -5,9 +5,9 @@ import { TaskModal } from './TaskModal';
 import CreateButton from '../CreateButton';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '../ui/use-toast';
-import { Route, Routes, useLocation } from 'react-router-dom';
-import TasksView from './TasksView';
+import { useLocation } from 'react-router-dom';
 import { sortTasksByPriority } from '@/lib/sort';
+import TaskRoutes from './TaskRoutes';
 
 const formattedDate = new Date().toISOString().split('T')[0];
 
@@ -120,44 +120,20 @@ const Tasks = ({ user }: { user: UserType }) => {
                 <div className='w-full h-full'>
                     <div className='hidden xl:block h-[600px] overflow-y-auto overflow-x-hidden p-4 border-2 border-zinc-700/20 rounded-md'>
                         <div className='space-y-4 w-full'>
-                            <Routes>
-                                <Route
-                                    path='/today'
-                                    element={
-                                        <TasksView
-                                            user={user}
-                                            tasks={todaysTasks}
-                                        />
-                                    }
-                                />
-                                <Route
-                                    path='/all'
-                                    element={
-                                        <TasksView user={user} tasks={tasks} />
-                                    }
-                                />
-                            </Routes>
+                            <TaskRoutes
+                                tasks={tasks}
+                                todaysTasks={todaysTasks}
+                                user={user}
+                            />
                         </div>
                     </div>
-					<div className='xl:hidden block space-y-4 w-full'>
-                            <Routes>
-                                <Route
-                                    path='/today'
-                                    element={
-                                        <TasksView
-                                            user={user}
-                                            tasks={todaysTasks}
-                                        />
-                                    }
-                                />
-                                <Route
-                                    path='/all'
-                                    element={
-                                        <TasksView user={user} tasks={tasks} />
-                                    }
-                                />
-                            </Routes>
-                        </div>
+                    <div className='xl:hidden block space-y-4 w-full'>
+                        <TaskRoutes
+                            tasks={tasks}
+                            todaysTasks={todaysTasks}
+                            user={user}
+                        />
+                    </div>
                 </div>
             </div>
         </>

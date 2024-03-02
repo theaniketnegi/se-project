@@ -208,52 +208,6 @@ const TaskCard = ({ task, user }: { task: TaskType; user: UserType }) => {
                         }}
                         onClickDelete={() => deleteTaskMutation.mutate()}
                     />
-                    {/* <div className='flex space-x-6'>
-                        {!edit ? (
-                            <div
-                                className='group relative hover:-translate-y-[2px] transition duration-100'
-                                onClick={() => setEdit((prevVal) => !prevVal)}
-                            >
-                                <MdOutlineEdit className='cursor-pointer' />
-                                <div className='absolute w-full bottom-0 group-hover:border-b-2 group-hover:border-black'></div>
-                            </div>
-                        ) : (
-                            <div className='flex space-x-4'>
-                                <div
-                                    className='group relative hover:-translate-y-[2px] transition duration-100'
-                                    onClick={() => {
-                                        updateTaskMutation.mutate({
-                                            title,
-                                            priority,
-                                            due_date: date,
-                                            done: task.done,
-                                        });
-                                        setEdit((prevVal) => !prevVal);
-                                    }}
-                                >
-                                    <IoMdCheckmark className='cursor-pointer' />
-                                    <div className='absolute w-full bottom-0 group-hover:border-b-2 group-hover:border-black'></div>
-                                </div>
-                                <div
-                                    className='group relative hover:-translate-y-[2px] transition duration-100'
-                                    onClick={() =>
-                                        setEdit((prevVal) => !prevVal)
-                                    }
-                                >
-                                    <IoMdClose className='cursor-pointer' />
-                                    <div className='absolute w-full bottom-0 group-hover:border-b-2 group-hover:border-black'></div>
-                                </div>
-                            </div>
-                        )}
-
-                        <div
-                            className='group relative hover:-translate-y-[2px] transition duration-100'
-                            onClick={() => deleteTaskMutation.mutate()}
-                        >
-                            <MdOutlineDelete className='cursor-pointer' />
-                            <div className='absolute w-full bottom-0 group-hover:border-b-2 group-hover:border-black'></div>
-                        </div>
-                    </div> */}
                 </div>
             </IconContext.Provider>
         </div>
