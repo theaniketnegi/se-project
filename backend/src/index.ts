@@ -15,10 +15,19 @@ import cors from 'cors';
 const app = express();
 
 mongoose.set('strictQuery', true);
-mongoose
-    .connect(MONGODB_URI)
-    .then((result) => console.log('connected to MongoDB'))
-    .catch((err) => console.error(err));
+
+function connectWithRetry() {
+    console.log('Connecting to MongoDB...');
+    mongoose
+        .connect(MONGODB_URI, {})
+        .then(() => console.log('connected to MongoDB'))
+        .catch((err) => {
+            console.error('Failed to connect:', err);
+            console.log('Retrying connection');
+            setTimeout(connectWithRetry, 5000);
+        });
+}
+connectWithRetry();
 
 const PORT = process.env.PORT;
 

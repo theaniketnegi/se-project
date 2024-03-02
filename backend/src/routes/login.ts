@@ -10,7 +10,7 @@ const loginRouter = express.Router();
 
 loginRouter.post('/', async (req, res, next) => {
     const { student_id, password } = req.body;
-    const user = await User.findOne({ student_id });
+    const user = await User.findOne({ student_id }).maxTimeMS(10000);
     const passwordCorrect =
         user === null
             ? false
