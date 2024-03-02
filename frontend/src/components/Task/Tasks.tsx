@@ -1,11 +1,10 @@
-import { ScrollArea } from './ui/scroll-area';
 import { TaskType, UserType } from '@/types';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { TaskModal } from './Task/TaskModal';
-import CreateButton from './CreateButton';
+import { TaskModal } from './TaskModal';
+import CreateButton from '../CreateButton';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useToast } from './ui/use-toast';
+import { useToast } from '../ui/use-toast';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import TasksView from './TasksView';
 import { sortTasksByPriority } from '@/lib/sort';
@@ -82,14 +81,9 @@ const Tasks = ({ user }: { user: UserType }) => {
         priority: string,
     ) => {
         newTaskMutation.mutate({ title, due_date, priority });
-
-        if (due_date === formattedDate) {
-            // setTasks((prevTasks) =>
-            //     prevTasks ? prevTasks.concat(response.data) : response.data,
-            // );
-        }
         setShowModal(false);
     };
+
     useEffect(() => {
         setTodaysTasks(
             fetchedTasks.data?.filter(
@@ -112,7 +106,7 @@ const Tasks = ({ user }: { user: UserType }) => {
                     onAddTask={onAddTask}
                 />
             )}
-            <div className='w-[90%] p-8 mx-auto flex flex-col space-y-8'>
+            <div className='w-[90%] p-6 md:p-8 mx-auto flex flex-col space-y-8'>
                 <div className='w-full space-y-4 mt-4'>
                     <h1 className='text-5xl font-bold'>
                         {params === 'today' ? "Today's tasks" : 'All tasks'}
@@ -120,13 +114,12 @@ const Tasks = ({ user }: { user: UserType }) => {
                     <div className='border-t-2 border-zinc-700/20 w-full'></div>
                 </div>
                 <CreateButton
-                    className='w-24 py-1 px-2 ml-auto flex justify-around items-center'
                     onClick={() => setShowModal(true)}
                     text='New task'
                 />
                 <div className='w-full h-full'>
-                    <ScrollArea className='h-[600px] p-4 border-2 border-zinc-700/20 rounded-md'>
-                        <div className='space-y-4'>
+                    <div className='hidden xl:block h-[600px] overflow-y-auto overflow-x-hidden p-4 border-2 border-zinc-700/20 rounded-md'>
+                        <div className='space-y-4 w-full'>
                             <Routes>
                                 <Route
                                     path='/today'
@@ -145,7 +138,26 @@ const Tasks = ({ user }: { user: UserType }) => {
                                 />
                             </Routes>
                         </div>
-                    </ScrollArea>
+                    </div>
+					<div className='xl:hidden block space-y-4 w-full'>
+                            <Routes>
+                                <Route
+                                    path='/today'
+                                    element={
+                                        <TasksView
+                                            user={user}
+                                            tasks={todaysTasks}
+                                        />
+                                    }
+                                />
+                                <Route
+                                    path='/all'
+                                    element={
+                                        <TasksView user={user} tasks={tasks} />
+                                    }
+                                />
+                            </Routes>
+                        </div>
                 </div>
             </div>
         </>

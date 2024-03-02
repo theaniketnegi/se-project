@@ -1,6 +1,6 @@
 import { TaskType, UserType } from '@/types';
-import TaskCard from './Task/TaskCard';
-import TaskCardSkeleton from './Task/TaskCardSkeleton';
+import TaskCard from './TaskCard';
+import TaskCardSkeleton from './TaskCardSkeleton';
 
 const TasksView = ({ tasks, user }: { tasks: TaskType[]; user: UserType }) => {
     return (

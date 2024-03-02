@@ -8,7 +8,10 @@ const projectRouter = express.Router();
 
 projectRouter.get('/', async (req: CustomUserRequest, res, next) => {
     const user = req.user;
-    const projects = await Project.find({ created_by: user?.id });
+    const projects = await Project.find({ created_by: user?.id }).populate({
+        path: 'projectTasks',
+		select: 'done difficulty'
+    });
     return res.json(projects);
 });
 

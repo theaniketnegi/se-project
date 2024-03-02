@@ -45,18 +45,18 @@ const SignInPage = () => {
         }
     };
     return (
-        <div className='flex h-full'>
-            <div className='bg-zinc-900 flex flex-1 items-center pl-24'>
-                <div className='space-y-6 w-[600px]'>
-                    <h1 className='text-white text-8xl font-bold cursor-pointer hover:-translate-y-2 transition duration-500'>
+        <div className='block xl:flex xl:flex-row h-full'>
+            <div className='bg-zinc-900 h-screen flex xl:flex-1 justify-center xl:justify-start items-center xl:pl-8 2xl:pl-24'>
+                <div className='space-y-6 xl:w-[300px] 2xl:w-[600px]'>
+                    <h1 className='text-white text-4xl sm:text-6xl md:text-7xl xl:text-8xl font-bold cursor-pointer hover:-translate-y-2 transition duration-500 xl:text-left text-center'>
                         Task Management
                     </h1>
-                    <h6 className='text-white text-2xl'>
+                    <h6 className='text-white text-2xl xl:text-left text-center'>
                         Task management application for students
                     </h6>
                 </div>
             </div>
-            <div className='flex-1 bg-white flex justify-center items-center'>
+            <div className='xl:flex-1 bg-white flex justify-center items-center h-screen'>
                 <div className='space-y-16 flex items-center justify-center flex-col w-[300px]'>
                     <h2 className='text-5xl font-bold'>Sign in</h2>
                     <form

@@ -3,7 +3,6 @@ import { Task } from '../models/tasks';
 import 'express-async-errors';
 import { CustomUserRequest } from '../utils/types';
 import { User } from '../models/users';
-import { startOfDay } from 'date-fns';
 
 const taskRouter = express.Router();
 

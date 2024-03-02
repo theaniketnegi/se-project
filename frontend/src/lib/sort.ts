@@ -1,31 +1,20 @@
 import { TaskType } from "@/types";
 
-const swap = (arr: TaskType[], i: number, j: number): void => {
-	const temp = arr[i];
-	arr[i] = arr[j];
-	arr[j] = temp;
-};
-
 export const sortTasksByPriority = (tasks: TaskType[]): TaskType[] => {
-	let low = 0;
-	let normal = 0;
-	let high = tasks.length - 1;
+    const priorityMap = { 'Low': 0, 'Normal': 1, 'High': 2 };
 
-	while (normal <= high) {
-		switch (tasks[normal].priority) {
-			case 'High':
-				swap(tasks, low++, normal++);
-				break;
-			case 'Normal':
-				normal++;
-				break;
-			case 'Low':
-				swap(tasks, normal, high--);
-				break;
-			default:
-				break;
-		}
-	}
+    const sortByPriority = (taskA: TaskType, taskB: TaskType) => {
+        const priorityA = priorityMap[taskA.priority as 'Low'|'Normal'|'High'];
+        const priorityB = priorityMap[taskB.priority as 'Low'|'Normal'|'High'];
 
-	return tasks;
+        if (priorityA !== priorityB) {
+            return priorityB - priorityA;
+        } else {
+            // If priorities are the same, sort by createdAt in descending order
+            return new Date(taskB.createdAt).getTime() - new Date(taskA.createdAt).getTime();
+        }
+    };
+
+    tasks.sort(sortByPriority);
+    return tasks;
 };

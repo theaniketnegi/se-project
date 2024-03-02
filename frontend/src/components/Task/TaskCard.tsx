@@ -1,9 +1,7 @@
 import { TaskType, UserType } from '@/types';
 import { Checkbox } from '../ui/checkbox';
-import { useEffect, useState } from 'react';
-import { MdOutlineEdit, MdOutlineDelete } from 'react-icons/md';
+import { useState } from 'react';
 import { IconContext } from 'react-icons/lib';
-import { IoMdClose, IoMdCheckmark } from 'react-icons/io';
 import { Input } from '../ui/input';
 import {
     Select,
@@ -16,6 +14,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '../ui/use-toast';
 import axios from 'axios';
 import { sortTasksByPriority } from '@/lib/sort';
+import EditTools from '../EditTools';
+import { format } from 'date-fns';
 
 const formattedDate = new Date().toISOString().split('T')[0];
 
@@ -49,6 +49,11 @@ const TaskCard = ({ task, user }: { task: TaskType; user: UserType }) => {
             const fetchTasks: TaskType[] = queryClient.getQueryData([
                 'tasks',
             ]) as TaskType[];
+            console.log(
+                fetchTasks.map((task) =>
+                    task._id === updatedTask._id ? updatedTask : task,
+                ),
+            );
             queryClient.setQueryData(
                 ['tasks'],
                 sortTasksByPriority(
@@ -88,17 +93,13 @@ const TaskCard = ({ task, user }: { task: TaskType; user: UserType }) => {
         },
     });
 
-    const [done, setDone] = useState<boolean>(false);
+    const [done, setDone] = useState<boolean>(task.done);
     const [edit, setEdit] = useState<boolean>(false);
     const [title, setTitle] = useState<string>(task.title);
     const [date, setDate] = useState<string>(
         task.due_date.toString().split('T')[0],
     );
     const [priority, setPriority] = useState<string>(task.priority);
-
-    useEffect(() => {
-        if (task.done) setDone(true);
-    }, [task.done]);
 
     return (
         <div
@@ -111,7 +112,7 @@ const TaskCard = ({ task, user }: { task: TaskType; user: UserType }) => {
                     ? 'border-yellow-300'
                     : 'border-red-500'
             } ${done && 'border-gray-400'}
-		flex justify-between
+		space-y-4 lg:space-y-0 lg:flex justify-between
 	`}
         >
             <div className='flex items-center space-x-4'>
@@ -137,17 +138,23 @@ const TaskCard = ({ task, user }: { task: TaskType; user: UserType }) => {
                         setDone((lastVal) => !lastVal);
                     }}
                 />
-                <div className={`relative ${done && 'text-gray-400'}`}>
+                <div
+                    className={`relative ${done && 'text-gray-400'} 
+                    	w-[220px] sm:w-[450px] md:w-[550px] lg:w-[375px] xl:w-[325px] 2xl:w-[560px] `}
+                >
                     {edit ? (
                         <Input
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                         />
                     ) : (
-                        task.title
-                    )}
-                    {done && (
-                        <div className='w-full absolute top-1/2 border-t-2 border-gray-400'></div>
+                        <p
+                            className={`${
+                                done && 'line-through'
+                            } decoration-2 text-ellipsis whitespace-nowrap overflow-hidden`}
+                        >
+                            {task.title}
+                        </p>
                     )}
                 </div>
             </div>
@@ -156,11 +163,11 @@ const TaskCard = ({ task, user }: { task: TaskType; user: UserType }) => {
                     size: '25',
                 }}
             >
-                <div className='flex space-x-6 items-center'>
+                <div className='space-y-4 md:space-y-0 md:flex md:space-x-6 items-center ml-[40px]'>
                     <div className={`${done && 'text-gray-400'}`}>
                         {edit && (
-                            <div className='flex space-x-6'>
-                                <Select
+                            <div className='flex md:space-x-6'>
+                                <Select 
                                     value={priority}
                                     onValueChange={(e) => setPriority(e)}
                                 >
@@ -185,9 +192,23 @@ const TaskCard = ({ task, user }: { task: TaskType; user: UserType }) => {
                                 />
                             </div>
                         )}
-                        {!edit && task.due_date.toString().split('T')[0]}
+                        {!edit && format(new Date(task.due_date), 'dd/MM/yy')}
                     </div>
-                    <div className='flex space-x-6'>
+                    <EditTools
+                        edit={edit}
+                        toggleEdit={() => setEdit((prevVal) => !prevVal)}
+                        onClickUpdate={() => {
+                            updateTaskMutation.mutate({
+                                title,
+                                priority,
+                                due_date: date,
+                                done: task.done,
+                            });
+                            setEdit((prevVal) => !prevVal);
+                        }}
+                        onClickDelete={() => deleteTaskMutation.mutate()}
+                    />
+                    {/* <div className='flex space-x-6'>
                         {!edit ? (
                             <div
                                 className='group relative hover:-translate-y-[2px] transition duration-100'
@@ -232,7 +253,7 @@ const TaskCard = ({ task, user }: { task: TaskType; user: UserType }) => {
                             <MdOutlineDelete className='cursor-pointer' />
                             <div className='absolute w-full bottom-0 group-hover:border-b-2 group-hover:border-black'></div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </IconContext.Provider>
         </div>
