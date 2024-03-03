@@ -7,11 +7,13 @@ import { useUserStore } from '@/store/userStore';
 import { UserType } from '@/types';
 import { useToast } from '@/components/ui/use-toast';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { SigninModal } from './SigninModal';
 
 const SignInPage = () => {
     const [studentId, setStudentId] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const user = useUserStore((state) => state.user);
     const setUser = useUserStore((state) => state.setUser);
     const { toast } = useToast();
@@ -55,22 +57,41 @@ const SignInPage = () => {
     return (
         <>
             {loading && (
-                <div className='absolute flex justify-center items-center z-10 w-screen bg-black/75 h-screen'>
+                <div className='absolute flex justify-center items-center z-20 w-screen bg-black/75 h-screen'>
                     <div className='border border-t-4 border-gray-400 rounded-full h-12 w-12 animate-spin'></div>
                 </div>
             )}
+            {showModal && (
+                <SigninModal
+                    onCloseModal={() => setShowModal(false)}
+                    onSignin={SignInButtonHandler}
+                    student_id={studentId}
+                    password={password}
+                    setStudentId={setStudentId}
+                    setPassword={setPassword}
+                />
+            )}
             <div className='block xl:flex xl:flex-row h-full'>
                 <div className='bg-zinc-900 h-screen flex xl:flex-1 justify-center xl:justify-start items-center xl:pl-8 2xl:pl-24'>
-                    <div className='space-y-6 xl:w-[300px] 2xl:w-[600px]'>
-                        <h1 className='text-white text-4xl sm:text-6xl md:text-7xl xl:text-8xl font-bold cursor-pointer hover:-translate-y-2 transition duration-500 xl:text-left text-center'>
+                    <div className='flex flex-col justify-center xl:justify-start xl:items-start items-center space-y-6 '>
+                        <h1 className='text-white text-4xl sm:text-6xl md:text-7xl xl:text-8xl font-bold cursor-pointer hover:-translate-y-2 transition duration-500 w-[700px] xl:w-[600px] text-center xl:text-left'>
                             Task Management
                         </h1>
-                        <h6 className='text-white text-2xl xl:text-left text-center'>
+                        <h6 className='text-white text-2xl'>
                             Task management application for students
                         </h6>
+                        <div className='xl:hidden'>
+                            <Button
+                                variant={'ghost'}
+                                className='border-2 px-4 py-2 outline-primary-foreground text-primary-foreground'
+                                onClick={() => setShowModal(true)}
+                            >
+                                Sign in
+                            </Button>
+                        </div>
                     </div>
                 </div>
-                <div className='xl:flex-1 bg-white flex justify-center items-center h-screen'>
+                <div className='hidden xl:flex-1 bg-white xl:flex justify-center items-center h-screen'>
                     <div className='space-y-16 flex items-center justify-center flex-col w-[300px]'>
                         <h2 className='text-5xl font-bold'>Sign in</h2>
                         <form
