@@ -10,7 +10,7 @@ projectRouter.get('/', async (req: CustomUserRequest, res, next) => {
     const user = req.user;
     const projects = await Project.find({ created_by: user?.id }).populate({
         path: 'projectTasks',
-		select: 'done difficulty'
+        select: 'done difficulty',
     });
     return res.json(projects);
 });
@@ -18,7 +18,10 @@ projectRouter.get('/', async (req: CustomUserRequest, res, next) => {
 projectRouter.get('/:id', async (req: CustomUserRequest, res, next) => {
     const user = req.user;
     const id = req.params.id;
-    const project = await Project.findOne({ created_by: user?.id, _id: id });
+    const project = await Project.findOne({
+        created_by: user?.id,
+        _id: id,
+    }).populate('projectTasks');
     if (!project) return res.status(404).json({ err: 'Not found' });
     return res.status(200).json(project);
 });

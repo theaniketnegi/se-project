@@ -14,6 +14,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useToast } from '../ui/use-toast';
 import { Input } from '../ui/input';
+import { Link } from 'react-router-dom';
 
 const ProjectCard = ({
     project,
@@ -86,8 +87,15 @@ const ProjectCard = ({
             );
         },
     });
+
     return (
-        <>
+        <Link
+            to={`/projects/${project._id}`}
+            onClick={() => {
+                queryClient.resetQueries({ queryKey: ['project'] });
+                console.log('Clicked');
+            }}
+        >
             <Card className='w-full h-[200px] relative shadow-md hover:-translate-y-1 transition duration-200 cursor-pointer'>
                 <CardHeader className='p-6 pt-8 flex justify-between'>
                     <div className='space-y-2'>
@@ -152,7 +160,7 @@ const ProjectCard = ({
                     />
                 </CardFooter>
             </Card>
-        </>
+        </Link>
     );
 };
 export default ProjectCard;

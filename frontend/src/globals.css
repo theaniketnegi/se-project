@@ -61,7 +61,7 @@ input[type='number'] {
 
 body,
 #root {
-    height: 100vh;
+    height: 100dvh;
 }
 
 @layer base {

@@ -26,7 +26,7 @@ export function SigninModal({
     setPassword: React.Dispatch<React.SetStateAction<string>>;
 }) {
     return (
-        <div className='absolute top-0 left-0 w-screen bg-black/75 h-screen m-0 z-10 flex justify-center items-center'>
+        <div className='absolute top-0 left-0 w-screen bg-black/75 h-[100dvh] m-0 z-10 flex justify-center items-center'>
             <div className='relative z-20'>
                 <Card className='w-[350px]'>
                     <form onSubmit={onSignin}>
@@ -52,6 +52,7 @@ export function SigninModal({
                                     <Label htmlFor='password'>Password</Label>
                                     <Input
                                         id='password'
+										type='password'
                                         placeholder='Enter password'
                                         value={password}
                                         onChange={(e) =>

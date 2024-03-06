@@ -57,7 +57,7 @@ const SignInPage = () => {
     return (
         <>
             {loading && (
-                <div className='absolute flex justify-center items-center z-20 w-screen bg-black/75 h-screen'>
+                <div className='absolute flex justify-center items-center z-20 w-screen bg-black/75 h-[100dvh]'>
                     <div className='border border-t-4 border-gray-400 rounded-full h-12 w-12 animate-spin'></div>
                 </div>
             )}
@@ -72,12 +72,12 @@ const SignInPage = () => {
                 />
             )}
             <div className='block xl:flex xl:flex-row h-full'>
-                <div className='bg-zinc-900 h-screen flex xl:flex-1 justify-center xl:justify-start items-center xl:pl-8 2xl:pl-24'>
+                <div className='bg-zinc-900 h-[100dvh] flex xl:flex-1 justify-center xl:justify-start items-center xl:pl-8 2xl:pl-24'>
                     <div className='flex flex-col justify-center xl:justify-start xl:items-start items-center space-y-6 '>
-                        <h1 className='text-white text-4xl sm:text-6xl md:text-7xl xl:text-8xl font-bold cursor-pointer hover:-translate-y-2 transition duration-500 w-[700px] xl:w-[600px] text-center xl:text-left'>
+                        <h1 className='text-white text-4xl sm:text-6xl md:text-7xl xl:text-8xl font-bold cursor-pointer hover:-translate-y-2 transition duration-500 xl:w-[600px] text-center xl:text-left'>
                             Task Management
                         </h1>
-                        <h6 className='text-white text-2xl'>
+                        <h6 className='text-white text-center xl:text-left text-2xl'>
                             Task management application for students
                         </h6>
                         <div className='xl:hidden'>
@@ -91,7 +91,7 @@ const SignInPage = () => {
                         </div>
                     </div>
                 </div>
-                <div className='hidden xl:flex-1 bg-white xl:flex justify-center items-center h-screen'>
+                <div className='hidden xl:flex-1 bg-white xl:flex justify-center items-center h-[100dvh]'>
                     <div className='space-y-16 flex items-center justify-center flex-col w-[300px]'>
                         <h2 className='text-5xl font-bold'>Sign in</h2>
                         <form

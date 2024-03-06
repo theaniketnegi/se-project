@@ -1,10 +1,5 @@
 import { useUserStore } from '@/store/userStore';
-import {
-    Route,
-    Routes,
-    useLocation,
-    useNavigate,
-} from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { IconContext } from 'react-icons/lib';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { IoChevronBackCircle } from 'react-icons/io5';
@@ -12,9 +7,9 @@ import { IoChevronBackCircle } from 'react-icons/io5';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import Tasks from './Task/Tasks';
-import Projects from './Project/Projects';
 import { useEffect, useRef, useState } from 'react';
 import SidebarContent from './SidebarContent';
+import ProjectsRoute from './Project/ProjectsRoute';
 
 const queryClient = new QueryClient();
 
@@ -78,7 +73,7 @@ const Home = () => {
                                 <IoChevronBackCircle />
                             </div>
                             <div
-                                className='bg-zinc-900 opacity-[0.97] w-[300px] absolute h-screen z-10'
+                                className='bg-zinc-900 opacity-[0.97] w-[300px] absolute h-[100dvh] z-10'
                                 ref={sidebarRef}
                             >
                                 <div className='h-full p-4 flex flex-col justify-between text-white'>
@@ -103,8 +98,8 @@ const Home = () => {
                                     element={<Tasks user={user} />}
                                 />
                                 <Route
-                                    path='/projects'
-                                    element={<Projects user={user} />}
+                                    path='/projects/*'
+                                    element={<ProjectsRoute user={user} />}
                                 />
                             </Routes>
                         </div>
