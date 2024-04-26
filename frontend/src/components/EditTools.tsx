@@ -19,7 +19,11 @@ const EditTools = ({
                 {!edit ? (
                     <div
                         className='group relative hover:-translate-y-[2px] transition duration-100'
-                        onClick={toggleEdit}
+                        onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            toggleEdit();
+                        }}
                     >
                         <MdOutlineEdit className='cursor-pointer' />
                         <div className='absolute w-full bottom-0 group-hover:border-b-2 group-hover:border-black'></div>
@@ -28,14 +32,22 @@ const EditTools = ({
                     <div className='flex space-x-4'>
                         <div
                             className='group relative hover:-translate-y-[2px] transition duration-100'
-                            onClick={onClickUpdate}
+                            onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                onClickUpdate();
+                            }}
                         >
                             <IoMdCheckmark className='cursor-pointer' />
                             <div className='absolute w-full bottom-0 group-hover:border-b-2 group-hover:border-black'></div>
                         </div>
                         <div
                             className='group relative hover:-translate-y-[2px] transition duration-100'
-                            onClick={toggleEdit}
+                            onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                toggleEdit();
+                            }}
                         >
                             <IoMdClose className='cursor-pointer' />
                             <div className='absolute w-full bottom-0 group-hover:border-b-2 group-hover:border-black'></div>

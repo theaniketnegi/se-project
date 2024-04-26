@@ -9,7 +9,7 @@ import {
 import { Progress } from '../ui/progress';
 import { calcPercentage } from '@/lib/calculatePercentage';
 import EditTools from '../EditTools';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useToast } from '../ui/use-toast';
@@ -96,7 +96,7 @@ const ProjectCard = ({
                 console.log('Clicked');
             }}
         >
-            <Card className='w-full h-[200px] relative shadow-md hover:-translate-y-1 transition duration-200 cursor-pointer'>
+            <Card className='w-full h-[200px] aspe relative shadow-md hover:-translate-y-1 transition duration-200 cursor-pointer'>
                 <CardHeader className='p-6 pt-8 flex justify-between'>
                     <div className='space-y-2'>
                         <div className='h-8 flex gap-4 items-center justify-between'>
@@ -105,9 +105,13 @@ const ProjectCard = ({
                                     type='text'
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                    }}
                                 />
                             ) : (
-                                <CardTitle className='text-ellipsis overflow-hidden whitespace-nowrap'>
+                                <CardTitle className='h-full text-ellipsis overflow-hidden whitespace-nowrap'>
                                     {project.title}
                                 </CardTitle>
                             )}
@@ -138,6 +142,10 @@ const ProjectCard = ({
                                         setDescription(e.target.value)
                                     }
                                     placeholder='Enter description'
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                    }}
                                 />
                             ) : (
                                 project.description && project.description
