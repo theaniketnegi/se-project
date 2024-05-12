@@ -30,7 +30,7 @@ const Home = () => {
         } else {
             navigate('/');
         }
-    }, [setUser]);
+    }, [setUser, navigate]);
     useEffect(() => {
         setShowSidebar(false);
     }, [params]);

@@ -9,7 +9,7 @@ import {
 import { Progress } from '../ui/progress';
 import { calcPercentage } from '@/lib/calculatePercentage';
 import EditTools from '../EditTools';
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useToast } from '../ui/use-toast';
@@ -96,7 +96,7 @@ const ProjectCard = ({
                 console.log('Clicked');
             }}
         >
-            <Card className='w-full h-[200px] aspe relative shadow-md hover:-translate-y-1 transition duration-200 cursor-pointer'>
+            <Card className='w-full h-[200px] relative shadow-md hover:-translate-y-1 transition duration-200 cursor-pointer'>
                 <CardHeader className='p-6 pt-8 flex justify-between'>
                     <div className='space-y-2'>
                         <div className='h-8 flex gap-4 items-center justify-between'>

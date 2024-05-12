@@ -98,7 +98,7 @@ const Projects = ({ user }: { user: UserType }) => {
                     text='New Project'
                 />
                 <div className='w-full h-full'>
-                    <div className='block space-x-8 md:mt-6 lg:space-x-0 lg:mt-0 lg:grid lg:grid-cols-2 2xl:grid-cols-3 gap-24 gap-y-20'>
+                    <div className='block space-y-8 md:mt-6 lg:space-y-0 lg:mt-0 lg:grid lg:grid-cols-2 2xl:grid-cols-3 gap-24 gap-y-20'>
                         {projects ? (
                             projects.map((project) => (
                                 <ProjectCard

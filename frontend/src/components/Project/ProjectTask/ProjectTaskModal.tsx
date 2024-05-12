@@ -78,7 +78,8 @@ export function ProjectTaskModal({
                             Cancel
                         </Button>
                         <Button
-                            onClick={() => {
+                            onClick={(e) => {
+                                e.preventDefault();
                                 onAddTask(title, difficulty);
                                 setTitle('');
                                 setDifficulty('Easy');

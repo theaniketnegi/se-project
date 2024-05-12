@@ -19,7 +19,15 @@ import { format } from 'date-fns';
 
 const formattedDate = new Date().toISOString().split('T')[0];
 
-const TaskCard = ({ task, user }: { task: TaskType; user: UserType }) => {
+const TaskCard = ({
+    task,
+    user,
+    pending = false,
+}: {
+    task: TaskType;
+    user: UserType;
+    pending?: boolean;
+}) => {
     const queryClient = useQueryClient();
     const { toast } = useToast();
 
@@ -107,11 +115,19 @@ const TaskCard = ({ task, user }: { task: TaskType; user: UserType }) => {
                 done
                     ? ''
                     : task.priority === 'Low'
-                    ? 'border-green-300'
+                    ? 'border-green-300 bg-white'
                     : task.priority == 'Normal'
-                    ? 'border-yellow-300'
-                    : 'border-red-500'
-            } ${done && 'border-gray-400'}
+                    ? 'border-yellow-300 bg-white'
+                    : 'border-red-500 bg-white'
+            } ${done && 'border-gray-400'} ${
+                pending && !done
+                    ? task.priority === 'Low'
+                        ? 'bg-green-300'
+                        : task.priority === 'Normal'
+                        ? 'bg-yellow-300'
+                        : 'bg-red-500'
+                    : ''
+            }
 		space-y-4 lg:space-y-0 lg:flex justify-between
 	`}
         >
@@ -126,7 +142,9 @@ const TaskCard = ({ task, user }: { task: TaskType; user: UserType }) => {
                     } ${
                         done &&
                         'border-gray-400 data-[state=checked]:bg-gray-400'
-                    } hover:cursor-pointer`}
+                    }
+					${pending && !done && 'border-primary'}
+					hover:cursor-pointer`}
                     checked={done}
                     onCheckedChange={() => {
                         updateTaskMutation.mutate({
@@ -153,7 +171,7 @@ const TaskCard = ({ task, user }: { task: TaskType; user: UserType }) => {
                                 done && 'line-through'
                             } decoration-2 text-ellipsis whitespace-nowrap overflow-hidden`}
                         >
-                            {task.title}
+                            {task.title} {pending&&'(DUE)'}
                         </p>
                     )}
                 </div>
@@ -167,7 +185,7 @@ const TaskCard = ({ task, user }: { task: TaskType; user: UserType }) => {
                     <div className={`${done && 'text-gray-400'}`}>
                         {edit && (
                             <div className='flex md:space-x-6'>
-                                <Select 
+                                <Select
                                     value={priority}
                                     onValueChange={(e) => setPriority(e)}
                                 >

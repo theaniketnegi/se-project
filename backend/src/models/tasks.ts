@@ -8,8 +8,7 @@ interface TaskType extends Document {
     created_by: mongoose.Types.ObjectId;
 }
 
-const today = new Date();
-today.setUTCHours(0,0,0,0);
+
 const taskSchema: mongoose.Schema = new mongoose.Schema(
     {
         title: {
@@ -18,12 +17,7 @@ const taskSchema: mongoose.Schema = new mongoose.Schema(
         },
         due_date: {
             type: Date,
-            validate: {
-                validator: function (v: Date) {
-                    return v >= today;
-                },
-				message: `Due date should be either today or later`,
-            },
+
         },
         done: {
             type: Boolean,

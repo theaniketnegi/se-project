@@ -1,4 +1,4 @@
-import { ProjectType, UserType } from '@/types';
+import { ProjectTaskType, ProjectType, UserType } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMatch } from 'react-router-dom';
 import { useToast } from '../ui/use-toast';
@@ -7,6 +7,7 @@ import { Skeleton } from '../ui/skeleton';
 import CreateButton from '../CreateButton';
 import { useState } from 'react';
 import { ProjectTaskModal } from './ProjectTask/ProjectTaskModal';
+import TaskByDifficulty from './ProjectTask/TaskByDifficulty';
 
 const ProjectView = ({ user }: { user: UserType }) => {
     const match = useMatch('/projects/:id');
@@ -63,12 +64,13 @@ const ProjectView = ({ user }: { user: UserType }) => {
                     ? `${error.response.data.err}`
                     : 'Error connecting',
             }),
-        onSuccess: (task) => {
+        onSuccess: (task: ProjectTaskType) => {
             const fetchProject: ProjectType = queryClient.getQueryData([
                 'project',
             ]) as ProjectType;
             queryClient.setQueryData(['project'], () => {
-                fetchProject.projectTasks = fetchProject.projectTasks.concat(task);
+                fetchProject.projectTasks =
+                    fetchProject.projectTasks.concat(task);
                 return fetchProject;
             });
         },
@@ -77,11 +79,14 @@ const ProjectView = ({ user }: { user: UserType }) => {
     const project: ProjectType =
         fetchProject.data && (fetchProject.data as ProjectType);
 
+    const filterProjectTasks = (difficulty: string) =>
+        project &&
+        project.projectTasks.filter((task) => task.difficulty === difficulty);
+
     const addProjectTask = (title: string, difficulty: string) => {
         addProjectTaskMutation.mutate({ title, difficulty });
         showModal(false);
     };
-    console.log(project);
 
     return (
         <>
@@ -100,6 +105,7 @@ const ProjectView = ({ user }: { user: UserType }) => {
                             project.title
                         )}
                     </h1>
+
                     <div className='border-t-2 border-zinc-700/20 w-full'></div>
                 </div>
                 <div className='mt-8'>
@@ -108,28 +114,25 @@ const ProjectView = ({ user }: { user: UserType }) => {
                         onClick={() => showModal(true)}
                     />
                 </div>
-                <div className='gap-16 flex h-[600px] w-full mt-8'>
-                    <div className='rounded-md bg-green-100/50 text-card-foreground w-[450px] shadow-md'>
-                        <div className='p-4'>
-                            <h1 className='text-2xl font-bold text-center text-black/70'>
-                                Easy
-                            </h1>
-                        </div>
-                    </div>
-                    <div className='rounded-md bg-yellow-100/50 text-card-foreground w-[450px] shadow-md'>
-                        <div className='p-4'>
-                            <h1 className='text-2xl font-bold text-center text-black/70'>
-                                Medium
-                            </h1>
-                        </div>
-                    </div>
-                    <div className='rounded-md bg-red-100/50 text-card-foreground w-[450px] shadow-md'>
-                        <div className='p-4'>
-                            <h1 className='text-2xl font-bold text-center text-black/70'>
-                                Hard
-                            </h1>
-                        </div>
-                    </div>
+                <div className='justify-between space-y-8  lg:flex lg:space-y-0 h-[600px] w-full mt-8'>
+                    <TaskByDifficulty
+                        label='Easy'
+                        color='#D1FAE580'
+                        tasks={filterProjectTasks('Easy')}
+                        user={user}
+                    />
+                    <TaskByDifficulty
+                        label='Medium'
+                        color='#FEF3C780'
+                        tasks={filterProjectTasks('Medium')}
+                        user={user}
+                    />
+                    <TaskByDifficulty
+                        label='Hard'
+                        color='#FEE2E280'
+                        tasks={filterProjectTasks('Hard')}
+                        user={user}
+                    />
                 </div>
             </div>
         </>

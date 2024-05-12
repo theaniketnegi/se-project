@@ -68,7 +68,7 @@ projectTaskRouter.delete(
             await project.save();
         }
 
-        return res.status(204).end();
+        return res.status(200).json(taskId);
     },
 );
 

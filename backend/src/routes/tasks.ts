@@ -6,6 +6,8 @@ import { User } from '../models/users';
 
 const taskRouter = express.Router();
 
+const today = new Date();
+
 taskRouter.get('/', async (req: CustomUserRequest, res, next) => {
     const user = req.user;
     const tasks = await Task.find({ created_by: user?.id });
@@ -31,6 +33,13 @@ taskRouter.get('/:id', async (req: CustomUserRequest, res, next) => {
 taskRouter.post('/', async (req: CustomUserRequest, res, next) => {
     const user = req.user;
     const { title, due_date, priority } = req.body;
+
+    if (new Date(due_date).setUTCHours(0, 0, 0, 0) < today.setUTCHours(0,0,0,0)) {
+        return res
+            .status(400)
+            .json({ err: 'Due date should be today or later' });
+    }
+
     const task = new Task({
         title,
         due_date,
