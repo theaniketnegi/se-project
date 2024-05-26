@@ -94,10 +94,11 @@ bg-white/50 flex justify-between items-center ${taskDone && 'text-gray-400'}
                 </div>
             </div>
             <div
-                className='w-5 h-5 text-primary cursor-pointer'
+                className='h-5 w-5 group relative hover:-translate-y-[2px] transition duration-100'
                 onClick={handleDelete}
             >
-                <MdOutlineDelete />
+                <MdOutlineDelete className='cursor-pointer' />
+                <div className='absolute w-full bottom-0 group-hover:border-b-2 group-hover:border-black'></div>
             </div>
         </div>
     );

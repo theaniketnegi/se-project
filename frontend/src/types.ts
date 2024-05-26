@@ -5,7 +5,7 @@ export interface TaskType {
     done: boolean;
     priority: string;
     created_by: string;
-	createdAt: string;
+    createdAt: string;
 }
 
 export type UserType = {
@@ -14,6 +14,13 @@ export type UserType = {
     section: string;
     program: string;
     student_id: string;
+};
+
+export type AdminType = {
+    token: string;
+    name: string;
+    org: string;
+    adminId: string;
 };
 
 export interface ProjectType {

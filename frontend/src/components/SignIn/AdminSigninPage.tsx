@@ -4,46 +4,45 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import axios from 'axios';
 import { useUserStore } from '@/store/userStore';
-import { UserType } from '@/types';
+import { AdminType } from '@/types';
 import { useToast } from '@/components/ui/use-toast';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { SigninModal } from './SigninModal';
 import { useAdminStore } from '@/store/adminStore';
 
-const SignInPage = () => {
-    const [studentId, setStudentId] = useState('');
+const AdminSignIn = () => {
+    const [adminId, setAdminId] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const user = useUserStore((state) => state.user);
-    const setUser = useUserStore((state) => state.setUser);
-
     const admin = useAdminStore((state) => state.admin);
+    const setAdmin = useAdminStore((state) => state.setAdmin);
     const { toast } = useToast();
     const navigate = useNavigate();
 
+    if (user) return <Navigate to='/' />;
     if (admin) return <Navigate to='/admin/students' />;
-    if (user) return <Navigate to='/today' />;
 
     const SignInButtonHandler = async (e: FormEvent) => {
         e.preventDefault();
 
-        if (studentId.trim() === '' || password.trim() === '') return;
+        if (adminId.trim() === '' || password.trim() === '') return;
         setLoading(true);
         try {
-            const userResponse = await axios.post('/api/login', {
-                student_id: studentId,
+            const userResponse = await axios.post('/api/adminLogin', {
+                adminId,
                 password,
             });
 
-            const userPayload: UserType = userResponse.data;
-            setUser(userPayload);
+            const userPayload: AdminType = userResponse.data;
+            setAdmin(userPayload);
             console.log(userPayload);
-            setStudentId('');
+            setAdminId('');
             setPassword('');
-            localStorage.setItem('userPayload', JSON.stringify(userPayload));
-            localStorage.removeItem('adminPayload');
-            navigate('/today');
+            localStorage.removeItem('userPayload');
+            localStorage.setItem('adminPayload', JSON.stringify(userPayload));
+            navigate('/admin/students');
         } catch (err: unknown) {
             const error = err as { response: { data: { err: string } } };
             toast({
@@ -70,10 +69,11 @@ const SignInPage = () => {
                 <SigninModal
                     onCloseModal={() => setShowModal(false)}
                     onSignin={SignInButtonHandler}
-                    user_id={studentId}
+                    user_id={adminId}
                     password={password}
-                    setUserId={setStudentId}
+                    setUserId={setAdminId}
                     setPassword={setPassword}
+                    admin
                 />
             )}
             <div className='block xl:flex xl:flex-row h-full'>
@@ -91,7 +91,7 @@ const SignInPage = () => {
                                 className='border-2 px-4 py-2 outline-primary-foreground text-primary-foreground'
                                 onClick={() => setShowModal(true)}
                             >
-                                Student Sign in
+                                Admin sign in
                             </Button>
                         </div>
                     </div>
@@ -104,13 +104,11 @@ const SignInPage = () => {
                             onSubmit={SignInButtonHandler}
                         >
                             <div>
-                                <Label>Student ID</Label>
+                                <Label>Admin ID</Label>
                                 <Input
                                     type='number'
-                                    value={studentId}
-                                    onChange={(e) =>
-                                        setStudentId(e.target.value)
-                                    }
+                                    value={adminId}
+                                    onChange={(e) => setAdminId(e.target.value)}
                                 />
                             </div>
                             <div>
@@ -128,9 +126,9 @@ const SignInPage = () => {
                                 <Button
                                     className=' self-end'
                                     variant={'link'}
-                                    onClick={() => navigate('/admin')}
+                                    onClick={() => navigate('/')}
                                 >
-                                    Admin login?
+                                    Student login?
                                 </Button>
                             </div>	
                         </form>
@@ -140,4 +138,4 @@ const SignInPage = () => {
         </>
     );
 };
-export default SignInPage;
+export default AdminSignIn;

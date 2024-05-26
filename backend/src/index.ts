@@ -12,6 +12,7 @@ import {
 import loginRouter from './routes/login';
 import projectRouter from './routes/projects';
 import cors from 'cors';
+import adminLoginRouter from './routes/adminLogin';
 const app = express();
 
 mongoose.set('strictQuery', true);
@@ -36,8 +37,9 @@ app.use(cors());
 app.use(express.json());
 app.use(requestLogger);
 app.use('/api/login', loginRouter);
-app.use('/api/users', userRouter);
+app.use('/api/adminLogin', adminLoginRouter)
 app.use(userPayload);
+app.use('/api/users', userRouter);
 app.use('/api/tasks', taskRouter);
 app.use('/api/projects', projectRouter);
 app.use(unknownEndpoint);

@@ -12,8 +12,7 @@ interface UserType extends Document {
     projects: mongoose.Types.ObjectId[];
 }
 
-
-const userSchema:mongoose.Schema = new mongoose.Schema(
+const userSchema: mongoose.Schema = new mongoose.Schema(
     {
         name: {
             type: String,
@@ -41,17 +40,13 @@ const userSchema:mongoose.Schema = new mongoose.Schema(
             enum: ['B.Tech.', 'M.Tech.', 'B.B.A.', 'M.B.A.', 'B.Sc.', 'M.Sc.'],
             required: true,
         },
-        role: {
-            type: String,
-            enum: ['Student', 'CR'],
-            default: 'Student',
-        },
         passwordHash: {
             type: String,
             required: true,
         },
         tasks: [{ type: mongoose.Types.ObjectId, ref: 'Task' }],
         projects: [{ type: mongoose.Types.ObjectId, ref: 'Project' }],
+        createdBy: { type: mongoose.Types.ObjectId, ref: 'Admin' },
     },
     { timestamps: true },
 );

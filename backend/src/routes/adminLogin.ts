@@ -1,16 +1,16 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
-import { User } from '../models/users';
 import jwt from 'jsonwebtoken';
 import { UserPayloadType } from '../utils/types';
 import 'express-async-errors';
 import { SECRET } from '../utils/config';
+import { Admin } from '../models/admin';
 
-const loginRouter = express.Router();
+const adminLoginRouter = express.Router();
 
-loginRouter.post('/', async (req, res, next) => {
-    const { student_id, password } = req.body;
-    const user = await User.findOne({ student_id }).maxTimeMS(10000);
+adminLoginRouter.post('/', async (req, res, next) => {
+    const { adminId, password } = req.body;
+    const user = await Admin.findOne({ adminId }).maxTimeMS(10000);
     const passwordCorrect =
         user === null
             ? false
@@ -18,15 +18,14 @@ loginRouter.post('/', async (req, res, next) => {
     if (!(user && passwordCorrect)) {
         return res.status(401).json({ err: 'Invalid username or password' });
     }
-    const payload: UserPayloadType = { id: user._id, role: 'Student' };
+    const payload: UserPayloadType = { id: user._id, role: 'Admin' };
     const token: string = jwt.sign(payload, SECRET);
     return res.status(200).send({
         token,
-        student_id,
+        adminId,
         name: user.name,
-        section: user.section,
-        program: user.program,
+        org: user.organization,
     });
 });
 
-export default loginRouter;
+export default adminLoginRouter;

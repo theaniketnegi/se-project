@@ -119,17 +119,20 @@ const TaskCard = ({
                     : task.priority == 'Normal'
                     ? 'border-yellow-300 bg-white'
                     : 'border-red-500 bg-white'
-            } ${done && 'border-gray-400'} ${
-                pending && !done
-                    ? task.priority === 'Low'
-                        ? 'bg-green-300'
-                        : task.priority === 'Normal'
-                        ? 'bg-yellow-300'
-                        : 'bg-red-500'
-                    : ''
-            }
+            } ${done && 'border-gray-400'}
 		space-y-4 lg:space-y-0 lg:flex justify-between
 	`}
+            style={{
+                backgroundColor: `${
+                    pending && !done
+                        ? task.priority === 'Low'
+                            ? 'rgb(134 239 172)'
+                            : task.priority === 'Normal'
+                            ? 'rgb(253 224 71)'
+                            : 'rgb(239 68 68)'
+                        : ''
+                }`,
+            }}
         >
             <div className='flex items-center space-x-4'>
                 <Checkbox
@@ -171,7 +174,7 @@ const TaskCard = ({
                                 done && 'line-through'
                             } decoration-2 text-ellipsis whitespace-nowrap overflow-hidden`}
                         >
-                            {task.title} {pending&&'(DUE)'}
+                            {task.title} {pending && '(DUE)'}
                         </p>
                     )}
                 </div>
