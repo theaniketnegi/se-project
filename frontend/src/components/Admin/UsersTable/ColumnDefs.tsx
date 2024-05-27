@@ -95,8 +95,10 @@ export const columns: ColumnDef<Student>[] = [
                         }),
                 onError: (
                     error: { response: { data: { err: string } } },
-					_: string,
-                    context: { previousStudents: UserType[] | undefined } | undefined,
+                    _: string,
+                    context:
+                        | { previousStudents: UserType[] | undefined }
+                        | undefined,
                 ) => {
                     toast({
                         variant: 'destructive',
@@ -136,9 +138,9 @@ export const columns: ColumnDef<Student>[] = [
             return (
                 <div
                     className='h-5 w-5 group relative hover:-translate-y-[2px] transition duration-100'
-                    onClick={() =>
-                        deleteTaskMutation.mutate(student.student_id)
-                    }
+                    onClick={() => {
+                        deleteTaskMutation.mutate(student.student_id);
+                    }}
                 >
                     <MdOutlineDelete className='cursor-pointer' />
                     <div className='absolute w-full bottom-0 group-hover:border-b-2 group-hover:border-black'></div>

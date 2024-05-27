@@ -28,7 +28,7 @@ export function SigninModal({
     setPassword: React.Dispatch<React.SetStateAction<string>>;
     admin?: boolean;
 }) {
-	const navigate = useNavigate();
+    const navigate = useNavigate();
     return (
         <div className='absolute top-0 left-0 w-screen bg-black/75 h-[100dvh] m-0 z-10 flex justify-center items-center'>
             <div className='relative z-20'>
@@ -76,6 +76,7 @@ export function SigninModal({
                                     <Button
                                         variant={'link'}
                                         className='self-end'
+                                        type='button'
                                         onClick={() =>
                                             navigate(
                                                 `${admin ? '/' : '/admin'}`,

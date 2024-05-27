@@ -57,11 +57,6 @@ const TaskCard = ({
             const fetchTasks: TaskType[] = queryClient.getQueryData([
                 'tasks',
             ]) as TaskType[];
-            console.log(
-                fetchTasks.map((task) =>
-                    task._id === updatedTask._id ? updatedTask : task,
-                ),
-            );
             queryClient.setQueryData(
                 ['tasks'],
                 sortTasksByPriority(

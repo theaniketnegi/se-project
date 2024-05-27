@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useAdminStore } from '@/store/adminStore';
 import AdminSidebarContent from './AdminSidebar';
 import AdminAllStudents from './AdminAllStudents';
+import AdminCreateStudent from './AdminCreateStudent';
 
 const queryClient = new QueryClient();
 
@@ -98,10 +99,10 @@ const Admin = () => {
                                     path='/students'
                                     element={<AdminAllStudents admin={admin} />}
                                 />
-                                {/* <Route
-                                    path='/projects/*'
-                                    element={<ProjectsRoute user={user} />}
-                                /> */}
+                                <Route
+                                    path='/create-student'
+                                    element={<AdminCreateStudent admin={admin} />}
+                                /> 
                             </Routes>
                         </div>
                     </QueryClientProvider>
