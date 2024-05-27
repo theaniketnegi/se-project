@@ -4,6 +4,7 @@ import { User } from '../models/users';
 import 'express-async-errors';
 import { Task } from '../models/tasks';
 import { CustomUserRequest } from '../utils/types';
+import { Project, ProjectTask } from '../models/projects';
 
 const userRouter = express.Router();
 
@@ -53,13 +54,28 @@ userRouter.post('/', async (req: CustomUserRequest, res, next) => {
 
 userRouter.delete('/:id', async (req: CustomUserRequest, res, next) => {
     const id = req.params.id;
-    const userFromDB = await User.findById(id);
+    const userFromDB = await User.findOne({
+        student_id: id,
+        createdBy: req.user?.id,
+    });
+
+    if (!userFromDB) {
+        return res.status(404).json({ err: 'Not found' });
+    }
     const taskIds = userFromDB?.tasks;
-
-    await User.findOneAndDelete({ id, createdBy: req.user?.id });
+    const projectIds = userFromDB?.projects;
+    await User.findOneAndDelete({ student_id: id, createdBy: req.user?.id });
     await Task.deleteMany({ _id: { $in: taskIds } });
+    for (const projectId of projectIds) {
+        const project = await Project.findById(projectId);
+        if (project) {
+            const projectTaskIds = project.projectTasks;
+            await ProjectTask.deleteMany({ _id: { $in: projectTaskIds } });
+        }
+    }
+    await Project.deleteMany({ _id: { $in: projectIds } });
 
-    return res.status(204).end();
+    return res.status(200).json(id);
 });
 
 export default userRouter;

@@ -5,14 +5,20 @@ import { useEffect } from 'react';
 import { useUserStore } from './store/userStore';
 import AdminSignIn from './components/SignIn/AdminSigninPage';
 import Admin from './components/Admin/Admin';
+import { useAdminStore } from './store/adminStore';
 
 const App = () => {
     const setUser = useUserStore((state) => state.setUser);
+    const setAdmin = useAdminStore((state) => state.setAdmin);
     useEffect(() => {
         if (localStorage.getItem('userPayload')) {
             setUser(JSON.parse(localStorage.getItem('userPayload') as string));
+        } else if (localStorage.getItem('adminPayload')) {
+            setAdmin(
+                JSON.parse(localStorage.getItem('adminPayload') as string),
+            );
         }
-    }, [setUser]);
+    }, [setUser, setAdmin]);
     return (
         <div className='h-full'>
             <Routes>
