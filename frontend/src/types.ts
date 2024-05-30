@@ -14,6 +14,7 @@ export type UserType = {
     section: string;
     program: string;
     student_id: string;
+	created_by: string;
 };
 
 export type AdminType = {
@@ -37,4 +38,13 @@ export interface ProjectTaskType {
     difficulty: string;
     project: string;
     title: string;
+}
+
+export interface NoticeType {
+    _id: string;
+    title: string;
+    description: Date;
+    created_by: string;
+    createdAt: string;
+	read?: boolean;
 }

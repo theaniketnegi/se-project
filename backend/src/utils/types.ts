@@ -3,7 +3,8 @@ import { Request } from 'express';
 
 export type UserPayloadType = {
     id: Types.ObjectId;
-	role: String;
+    role: 'Student' | 'Admin';
+    created_by?: Types.ObjectId;
 };
 
 export interface CustomUserRequest extends Request {

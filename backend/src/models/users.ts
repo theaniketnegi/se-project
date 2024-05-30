@@ -10,6 +10,8 @@ interface UserType extends Document {
     passwordHash: string;
     tasks: mongoose.Types.ObjectId[];
     projects: mongoose.Types.ObjectId[];
+    notices: { notice: mongoose.Types.ObjectId; read?: boolean }[];
+    createdBy: mongoose.Types.ObjectId;
 }
 
 const userSchema: mongoose.Schema = new mongoose.Schema(
@@ -44,6 +46,12 @@ const userSchema: mongoose.Schema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        notices: [
+            {
+                notice: { type: mongoose.Types.ObjectId, ref: 'Notice' },
+                read: { type: Boolean, default: false },
+            },
+        ],
         tasks: [{ type: mongoose.Types.ObjectId, ref: 'Task' }],
         projects: [{ type: mongoose.Types.ObjectId, ref: 'Project' }],
         createdBy: { type: mongoose.Types.ObjectId, ref: 'Admin' },

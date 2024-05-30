@@ -10,6 +10,7 @@ import { useAdminStore } from '@/store/adminStore';
 import AdminSidebarContent from './AdminSidebar';
 import AdminAllStudents from './AdminAllStudents';
 import AdminCreateStudent from './AdminCreateStudent';
+import AdminNotices from './AdminNotices';
 
 const queryClient = new QueryClient();
 
@@ -101,8 +102,14 @@ const Admin = () => {
                                 />
                                 <Route
                                     path='/create-student'
-                                    element={<AdminCreateStudent admin={admin} />}
-                                /> 
+                                    element={
+                                        <AdminCreateStudent admin={admin} />
+                                    }
+                                />
+                                <Route
+                                    path='/notices'
+                                    element={<AdminNotices admin={admin} />}
+                                />
                             </Routes>
                         </div>
                     </QueryClientProvider>

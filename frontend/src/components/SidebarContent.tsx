@@ -10,8 +10,12 @@ import {
     TooltipTrigger,
 } from './ui/tooltip';
 import { GoSignOut } from 'react-icons/go';
-import { UserType } from '@/types';
+import { NoticeType, UserType } from '@/types';
 import { useUserStore } from '@/store/userStore';
+import { RiNotification2Line } from 'react-icons/ri';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { useToast } from './ui/use-toast';
 
 const SidebarContent = ({
     params,
@@ -21,8 +25,36 @@ const SidebarContent = ({
     user: UserType;
 }) => {
     const navigate = useNavigate();
-	const signoutUser = useUserStore((state) => state.signout);
+    const signoutUser = useUserStore((state) => state.signout);
+    const { toast } = useToast();
 
+    const fetchedNotices = useQuery({
+        queryKey: ['notices'],
+        queryFn: async () => {
+            try {
+                const response = await axios.get('/api/notices', {
+                    headers: {
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                });
+                return response.data;
+            } catch (err) {
+                const error = err as { response: { data: { err: string } } };
+                toast({
+                    variant: 'destructive',
+                    title: 'Error fetching notices',
+                    description: error.response.data.err
+                        ? `${error.response.data.err}`
+                        : 'Error connecting',
+                });
+                throw new Error(error.response.data.err);
+            }
+        },
+        retry: false,
+    });
+
+    const notices: NoticeType[] = fetchedNotices.data;
+    const count = notices && notices.filter((n) => !n.read).length;
     return (
         <>
             <div className='flex flex-col space-y-16'>
@@ -63,6 +95,24 @@ const SidebarContent = ({
                         >
                             <GrProjects className='w-5' />
                             Projects
+                        </div>
+                    </Link>
+                    <Link to='/notices'>
+                        <div
+                            className={`p-4 pl-3 cursor-pointer hover:-translate-y-1 transition duration-200 flex gap-4 items-center ${
+                                params === 'notices' &&
+                                'bg-zinc-700/70 rounded-md'
+                            } flex justify-between`}
+                        >
+                            <div className='flex justify-between'>
+                                <RiNotification2Line className='w-5' />
+                                <div className='ml-4'>Notices</div>
+                            </div>
+                            {count > 0 && (
+                                <div className='rounded-full border-2 w-6 h-6 flex items-center justify-center'>
+                                    <div className='mb-1'>{count}</div>
+                                </div>
+                            )}
                         </div>
                     </Link>
                 </div>

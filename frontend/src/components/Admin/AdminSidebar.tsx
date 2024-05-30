@@ -1,4 +1,3 @@
-import { GrProjects } from 'react-icons/gr';
 import { IoAdd, IoPeople } from 'react-icons/io5';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -11,6 +10,7 @@ import {
 import { GoSignOut } from 'react-icons/go';
 import { AdminType } from '@/types';
 import { useAdminStore } from '@/store/adminStore';
+import { RiNotification2Line } from 'react-icons/ri';
 
 const AdminSidebarContent = ({
     params,
@@ -50,7 +50,7 @@ const AdminSidebarContent = ({
                                 'bg-zinc-700/70 rounded-md'
                             }`}
                         >
-                            <GrProjects className='w-5' />
+                            <RiNotification2Line className='w-5' />
                             Notices
                         </div>
                     </Link>

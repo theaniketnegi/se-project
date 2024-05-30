@@ -55,14 +55,6 @@ const AdminAllStudents = ({ admin }: { admin: AdminType }) => {
                         {students && (
                             <DataTable columns={columns} data={students} />
                         )}
-                        {/* <div className='hidden xl:block h-[600px] overflow-y-auto overflow-x-hidden p-4 border-2 border-zinc-700/20 rounded-md'>
-                        <div className='space-y-4 w-full'>
-                           
-                        </div>
-                    </div>
-                    <div className='xl:hidden block space-y-4 w-full'>
-                        
-                    </div> */}
                     </div>
                 </div>
             </div>

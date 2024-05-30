@@ -5,6 +5,7 @@ import 'express-async-errors';
 import { Task } from '../models/tasks';
 import { CustomUserRequest } from '../utils/types';
 import { Project, ProjectTask } from '../models/projects';
+import { Notice } from '../models/notices';
 
 const userRouter = express.Router();
 
@@ -20,6 +21,58 @@ const verifyUserPermissions = async (
         return res.status(403).json({ err: 'Not authorized' });
     next();
 };
+
+userRouter.put('/:id', async (req: CustomUserRequest, res, next) => {
+    const id = req.params.id;
+    const user = await User.findOne({ student_id: id });
+    if (!user || req.user?.id.toString() !== user._id.toString())
+        return res.status(403).json({ err: 'Not authorized' });
+    const { all, noticeId } = req.body;
+
+    if (all) {
+        const updatedUser = await User.findOneAndUpdate(
+            { _id: user._id },
+            { $set: { 'notices.$[].read': true } },
+            { new: true },
+        )
+            .populate('notices.notice')
+            .lean();
+        if (!updatedUser) {
+            return res.status(404).json({ err: 'Failed to update' });
+        }
+        const updatedNotices = updatedUser?.notices.map((n) => {
+            const { notice, read } = n;
+            return { ...notice, read };
+        });
+        return res.status(200).json(updatedNotices);
+    }
+    if (!noticeId) return res.status(400);
+
+    const userNotice = user.notices.find(
+        (n) => n.notice.toString() === noticeId,
+    );
+    if (!userNotice) {
+        return res.status(404).json({ err: 'Notice not found' });
+    }
+    const updatedUser = await User.findOneAndUpdate(
+        {
+            _id: user.id,
+            'notices.notice': noticeId,
+        },
+        { $set: { 'notices.$.read': !userNotice.read } },
+        { new: true },
+    )
+        .populate('notices.notice')
+        .lean();
+    const updatedNotice = updatedUser?.notices.find(
+        (n) => n.notice._id.toString() === noticeId,
+    );
+    if (!updatedNotice)
+        return res.status(404).json({ err: 'Notice not found' });
+    console.log(updatedNotice);
+    const { notice, read } = updatedNotice;
+    return res.status(200).json({ ...notice, read });
+});
 
 userRouter.use(verifyUserPermissions);
 
@@ -48,6 +101,13 @@ userRouter.post('/', async (req: CustomUserRequest, res, next) => {
         passwordHash,
         createdBy: req.user?.id,
     });
+    const notices = await Notice.find({ createdBy: req.user?.id });
+    if (notices) {
+        const userNotices = notices.map((notice) => ({
+            notice: notice._id,
+        }));
+        user.notices = userNotices;
+    }
     const newUser = await user.save();
     return res.status(201).json(newUser);
 });
