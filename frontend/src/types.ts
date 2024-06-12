@@ -43,7 +43,7 @@ export interface ProjectTaskType {
 export interface NoticeType {
     _id: string;
     title: string;
-    description: Date;
+    description: string;
     created_by: string;
     createdAt: string;
 	read?: boolean;
